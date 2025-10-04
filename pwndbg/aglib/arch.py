@@ -10,6 +10,7 @@ import pwnlib
 from capstone import CS_ARCH_AARCH64
 from capstone import CS_ARCH_ARM
 from capstone import CS_ARCH_LOONGARCH
+from capstone import CS_ARCH_M68K
 from capstone import CS_ARCH_MIPS
 from capstone import CS_ARCH_PPC
 from capstone import CS_ARCH_RISCV
@@ -29,6 +30,7 @@ from capstone import CS_MODE_RISCV64
 from capstone import CS_MODE_RISCVC
 from capstone import CS_MODE_THUMB
 from capstone import CS_MODE_V9
+from capstone import CS_MODE_M68K_000
 from typing_extensions import override
 
 import pwndbg
@@ -61,6 +63,8 @@ def register_arch(arch: PwndbgArchitecture):
 
 
 def get_pwndbg_architecture(name: PWNDBG_SUPPORTED_ARCHITECTURES_TYPE) -> PwndbgArchitecture | None:
+    if name == "m68k:68000":
+        name = "m68k"
     if name not in registered_architectures:
         return None
 
@@ -365,6 +369,19 @@ class S390xArch(PwndbgArchitecture):
     def get_capstone_constants(self, address: int) -> Tuple[int, int]:
         return (CS_ARCH_SYSTEMZ, 0)
 
+class M68kArch(PwndbgArchitecture):
+    instruction_alignment = 2
+    max_instruction_size = 16
+    endian = "big"
+    ptrsize = 4
+
+    def __init__(self) -> None:
+        super().__init__("m68k")
+        self.function_abi = DEFAULT_ABIS.get((32, "m68k", "linux"))
+
+    @override
+    def get_capstone_constants(self, address: int) -> Tuple[int, int]:
+        return (CS_ARCH_M68K, CS_MODE_M68K_000)
 
 # Register the architecture classes
 all_arches = [
@@ -381,6 +398,7 @@ all_arches = [
     MipsArch(),
     Loongarch64Arch(),
     S390xArch(),
+    M68kArch(),
 ]
 
 for arch in all_arches:

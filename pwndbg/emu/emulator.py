@@ -92,6 +92,7 @@ arch_to_UC = {
     "rv32": U.UC_ARCH_RISCV,
     "rv64": U.UC_ARCH_RISCV,
     "s390x": U.UC_ARCH_S390X,
+    "m68k": U.UC_ARCH_M68K,
 }
 
 # Architecture specific maps: Map<"UC_*_REG_*",constant>
@@ -106,6 +107,7 @@ arch_to_UC_consts = {
     "rv32": parse_consts(U.riscv_const),
     "rv64": parse_consts(U.riscv_const),
     "s390x": parse_consts(U.s390x_const),
+    "m68k": parse_consts(U.m68k_const),
 }
 
 # Architecture specific maps: Map<reg_name, Unicorn constant>
@@ -125,6 +127,12 @@ arch_to_reg_const_map = {
     "rv32": create_reg_to_const_map(arch_to_UC_consts["rv32"]),
     "rv64": create_reg_to_const_map(arch_to_UC_consts["rv64"]),
     "s390x": create_reg_to_const_map(arch_to_UC_consts["s390x"]),
+    "m68k": create_reg_to_const_map(arch_to_UC_consts["m68k"], {
+        "FP": U.m68k_const.UC_M68K_REG_A6,
+        "SP": U.m68k_const.UC_M68K_REG_A7,
+        "PS": U.m68k_const.UC_M68K_REG_SR,
+        "SR": U.m68k_const.UC_M68K_REG_SR,
+    }),
 }
 
 # Architectures for which we want to enable virtual TLB mode
@@ -229,7 +237,12 @@ class Emulator:
         self.uc_mode = self.get_uc_mode()
         debug(DEBUG_INIT, "# Instantiating Unicorn for %s", self.arch)
         debug(DEBUG_INIT, "uc = U.Uc(%r, %r)", (arch_to_UC[self.arch], self.uc_mode))
-        self.uc = U.Uc(arch_to_UC[self.arch], self.uc_mode)
+
+        uc_cpu = None
+        if self.arch == "m68k":
+            uc_cpu = U.m68k_const.UC_CPU_M68K_M68000
+
+        self.uc = U.Uc(arch_to_UC[self.arch], self.uc_mode, cpu=uc_cpu)
 
         if enable_virtual_tlb.get(self.arch, False):
             debug(DEBUG_INIT, "# Setting TLB mode to virtual")
@@ -604,7 +617,7 @@ class Emulator:
             and "isa32r6" in gdb.newest_frame().architecture().name()
         ):
             mode |= U.UC_MODE_MIPS32R6
-        elif arch == "s390x":
+        elif arch == "s390x" or arch == "m68k":
             pass  # fails with invalid mode error otherwise
         else:
             mode |= {4: U.UC_MODE_32, 8: U.UC_MODE_64}[pwndbg.aglib.arch.ptrsize]

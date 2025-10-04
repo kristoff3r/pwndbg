@@ -80,6 +80,9 @@ linux_i386_sigreturn = SigreturnABI(("eax",), 4, 0)
 linux_amd64_sigreturn = SigreturnABI(("rax",), 4, 0)
 linux_arm_sigreturn = SigreturnABI(("r7",), 4, 0)
 
+linux_m68k = ABI((), 4, 0)
+
+
 # Fake ABIs used by SROP
 linux_i386_srop = ABI(("eax",), 4, 0)
 linux_amd64_srop = ABI(("rax",), 4, 0)
@@ -97,6 +100,7 @@ DEFAULT_ABIS: Dict[Tuple[int, str, str], ABI] = {
     (64, "powerpc", "linux"): linux_ppc64,
     (32, "rv32", "linux"): linux_riscv32,
     (64, "rv64", "linux"): linux_riscv64,
+    (32, "m68k", "linux"): linux_m68k,
 }
 
 SYSCALL_ABIS: Dict[Tuple[int, str, str], SyscallABI] = {

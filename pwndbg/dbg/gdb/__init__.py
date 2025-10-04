@@ -59,6 +59,7 @@ gdb_architecture_name_fixup_list = (
     "riscv",
     "loongarch64",
     "s390:64-bit",
+    "m68k:68000",
 )
 
 # `show architecture` returns a string like "mips:isa32r5"
@@ -757,6 +758,8 @@ class GDBProcess(pwndbg.dbg_mod.Process):
                     match = "powerpc"
                 elif match == "s390:64-bit":
                     match = "s390x"
+                elif match.startswith("m68k:"):
+                    match = "m68k"
                 return ArchDefinition(
                     name=match,  # type: ignore[arg-type]
                     ptrsize=ptrsize,

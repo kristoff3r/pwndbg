@@ -23,6 +23,7 @@ import pwndbg.aglib.disasm.arch
 import pwndbg.aglib.disasm.arm
 import pwndbg.aglib.disasm.disassembly
 import pwndbg.aglib.disasm.loongarch64
+import pwndbg.aglib.disasm.m68k
 import pwndbg.aglib.disasm.mips
 import pwndbg.aglib.disasm.riscv
 import pwndbg.aglib.disasm.x86
@@ -495,6 +496,7 @@ ALL_DISASSEMBLY_ASSISTANTS: Dict[
     "x86-64": lambda: pwndbg.aglib.disasm.x86.X86DisassemblyAssistant("x86-64"),
     "arm": lambda: pwndbg.aglib.disasm.arm.ArmDisassemblyAssistant("arm", "cpsr"),
     "armcm": lambda: pwndbg.aglib.disasm.arm.ArmDisassemblyAssistant("armcm", "xpsr"),
+    "m68k": lambda: pwndbg.aglib.disasm.m68k.M68kDisassemblyAssistant("m68k"),
     "mips": lambda: pwndbg.aglib.disasm.mips.MipsDisassemblyAssistant("mips"),
     "rv32": lambda: pwndbg.aglib.disasm.riscv.RISCVDisassemblyAssistant("rv32"),
     "rv64": lambda: pwndbg.aglib.disasm.riscv.RISCVDisassemblyAssistant("rv64"),

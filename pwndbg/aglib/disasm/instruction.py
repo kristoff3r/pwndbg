@@ -24,6 +24,11 @@ from capstone.loongarch import LOONGARCH_INS_ALIAS_JR
 from capstone.loongarch import LOONGARCH_INS_B
 from capstone.loongarch import LOONGARCH_INS_BL
 from capstone.loongarch import LOONGARCH_INS_JIRL
+from capstone.m68k import M68K_INS_BRA
+from capstone.m68k import M68K_INS_BSR
+from capstone.m68k import M68K_INS_DBRA
+from capstone.m68k import M68K_INS_JMP
+from capstone.m68k import M68K_INS_JSR
 from capstone.mips import MIPS_INS_ALIAS_B
 from capstone.mips import MIPS_INS_ALIAS_BAL
 from capstone.mips import MIPS_INS_B
@@ -94,6 +99,13 @@ UNCONDITIONAL_JUMP_INSTRUCTIONS: Dict[int, Set[int]] = {
         LOONGARCH_INS_JIRL,
         LOONGARCH_INS_ALIAS_JR,
     },
+    CS_ARCH_M68K: {
+        M68K_INS_BRA,
+        M68K_INS_BSR,
+        M68K_INS_DBRA,
+        M68K_INS_JMP,
+        M68K_INS_JSR,
+    }
 }
 
 # See: https://github.com/capstone-engine/capstone/issues/2448
@@ -146,6 +158,7 @@ CAPSTONE_ARCH_MAPPING_STRING = {
     CS_ARCH_RISCV: "RISCV",
     CS_ARCH_SYSTEMZ: "s390x",
     CS_ARCH_LOONGARCH: "loongarch",
+    CS_ARCH_M68K: "m68k",
 }
 
 

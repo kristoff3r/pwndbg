@@ -1224,6 +1224,35 @@ s390x = RegisterSet(
     retval="r2",
 )
 
+
+m68k_flags = BitFlags([("X", 4), ("N", 4), ("Z", 4), ("V", 4), ("C", 4)])
+
+m68k = RegisterSet(
+    pc=Reg("pc"),
+    stack=Reg("sp"), # a7
+    frame=Reg("fp"), # a6
+    flags={"ps": m68k_flags}, # disasm calls it "sr"
+    gpr=(
+        Reg("d0"),
+        Reg("d1"),
+        Reg("d2"),
+        Reg("d3"),
+        Reg("d4"),
+        Reg("d5"),
+        Reg("d6"),
+        Reg("d7"),
+        Reg("a0"),
+        Reg("a1"),
+        Reg("a2"),
+        Reg("a3"),
+        Reg("a4"),
+        Reg("a5"),
+        # Reg("fp"), # a6
+        # Reg("sp"), # a7
+    ),
+    misc=("sr",)
+)
+
 reg_sets: Dict[PWNDBG_SUPPORTED_ARCHITECTURES_TYPE, RegisterSet] = {
     "i386": i386,
     "i8086": i386,
@@ -1238,4 +1267,5 @@ reg_sets: Dict[PWNDBG_SUPPORTED_ARCHITECTURES_TYPE, RegisterSet] = {
     "powerpc": powerpc,
     "loongarch64": loongarch64,
     "s390x": s390x,
+    "m68k": m68k,
 }
